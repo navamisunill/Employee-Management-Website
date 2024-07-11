@@ -1,0 +1,33 @@
+{%extends 'layout.html'%}
+{%block content%}
+<h1>Create Employee</h1>
+<link rel="stylesheet" href="static/createform.css">
+<form action="/employee/create" method="POST">
+    <label for=" Employeeid">Employee id:</label>
+    <input type="text" id="Employeeid" name="Employeeid"><br>
+    <label for="FirstName">First Name:</label>
+    <input type="text" id="FirstName" name="FirstName"><br>
+    <label for="LastName">Last Name:</label>
+    <input type="text" id="LastName" name="LastName"><br>
+    <label for="Age">Age:</label>
+    <input type="text" id="Age" name="Age"><br>
+    <div class="form-group">
+        <label for= "Designation">Designation</label>
+        <select class="form-control" name="Designation">
+           <option value="HR Manager" >HR Manager</option>
+                 <option value="Senior Software Engineer" >Senior Software Engineer</option>
+                 <option value="Junior Software Engineer" >Junior Software Engineer</option>
+                 <option value="Senior Frontend Developer" >Senior Frontend Developer</option>
+                 <option value="Junior Frontend Developer" >Junior Frontend Developer</option>
+                 <option value="Senior Backend Developer" >Senior Backend Developer</option>
+                 <option value="Junior Backend Developer" >Junior Backend Developer</option>
+                 <option value="System Analyst">System Analyst</option>
+                 <option value="Senior Software Tester" >Senior Software Tester</option>
+                 <option value="Junior Software Tester" >Junior Software Tester</option>
+        </select>
+     </div>
+    <label for="Salary">Salary:</label>
+    <input type="text" id="Salary" name="Salary"><br>
+    <button type="submit">Create</button>
+</form>
+{%endblock%}
