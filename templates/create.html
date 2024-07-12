@@ -1,9 +1,9 @@
 {%extends 'layout.html'%}
 {%block content%}
 <h1>Create Employee</h1>
-<link rel="stylesheet" href="static/createform.css">
-<form action="/employee/create" method="POST">
-    <label for=" Employeeid">Employee id:</label>
+<link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
+<form action="/employee/createemployee" method='POST'>
+    <label for="Employeeid">Employee id:</label>
     <input type="text" id="Employeeid" name="Employeeid"><br>
     <label for="FirstName">First Name:</label>
     <input type="text" id="FirstName" name="FirstName"><br>
@@ -12,7 +12,7 @@
     <label for="Age">Age:</label>
     <input type="text" id="Age" name="Age"><br>
     <div class="form-group">
-        <label for= "Designation">Designation</label>
+        <label for="Designation">Designation</label>
         <select class="form-control" name="Designation">
            <option value="HR Manager" >HR Manager</option>
                  <option value="Senior Software Engineer" >Senior Software Engineer</option>

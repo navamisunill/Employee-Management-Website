@@ -1,10 +1,9 @@
 {% extends 'layout.html' %}
 {% block content %}
-  <h1>CodeSphere Technologies</h1>
   <h2> Employees</h2> 
 
-  <a href="/employee">
-    <button>Create Employee</button>
+  <a href="/employee/create">
+    <button id="createbutton">Create Employee</button>
   </a>
 
   {% if employees %}
@@ -30,5 +29,7 @@
             </tr>   
         {% endfor %}
     </table>
+  {% else %}
+    <p>No employees found</p>
   {% endif %}
 {%endblock%}

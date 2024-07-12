@@ -9,11 +9,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div class="navbar">
-        <ul>
-            <li><a href="/">Home</a></li>
-        </ul>
+    <div class="company-title">
+        <h1>CodeSphere Technologies</h1>
     </div>
+    <div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">CodeSphere</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('elogin') }}">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Apply for Leave</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <div id="container">
         <br>
         <br>

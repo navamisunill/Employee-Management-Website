@@ -1,4 +1,4 @@
-from flask import Flask, render_template ,url_for, request, flash, redirect
+from flask import Flask, render_template ,url_for, request, flash, redirect,session
 from markupsafe import escape
 import mysql.connector
 
@@ -18,68 +18,131 @@ mycursor= mydb.cursor(dictionary=True)
 
 
 # Define a route and a function to handle the route
-@app.route('/')
-def index():
-    mycursor.execute("SELECT * FROM project.employee")
-    employees=mycursor.fetchall()
-    return render_template('home.html',employees= employees)
-
-@app.route("/employee")
-def show_employee_create_form():
-    return render_template('create.html')
-
-@app.route('/employee/create',methods=['GET','POST'])
-def create():
+@app.route('/', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
-        # Get form data
-        Employeeid = escape(request.form['Employeeid'])
-        FirstName = escape(request.form['FirstName'])
-        LastName = escape(request.form['LastName'])
-        Age = escape(request.form['Age'])
-        Designation = escape(request.form['Designation'])
-        Salary = escape(request.form['Salary'])
-        sql= """insert into employee (Employeeid, FirstName, LastName, Age, Designation, Salary) values (%s, %s, %s, %s, %s, %s)"""
-        values=( Employeeid, FirstName, LastName, Age, Designation, Salary)
-        mycursor.execute(sql, values)
-        mydb.commit()
-        if mycursor.rowcount > 0:
-            message= " Employee created successfully"
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username == "admin" and password == "admin":
+            session['username'] = username
+            flash('Login successful')
+            return redirect(url_for('home'))
         else:
-            message= None
-        flash(message)
-        return redirect(url_for('index'))
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
     
-@app.route('/employee/edit/<Employeeid>',methods=['GET','POST'])
-def edit_employee(Employeeid):
-    Employeeid= escape(Employeeid)
-    if request.method == 'GET':
-        return show_employee_edit_form(Employeeid)
-    else:
-        Employeeid = escape(request.form['Employeeid'])
-        FirstName = escape(request.form['FirstName'])
-        LastName = escape(request.form['LastName'])
-        Age = escape(request.form['Age'])
-        Designation = escape(request.form['Designation'])
-        Salary = escape(request.form['Salary'])
+    return render_template('login.html')
 
-        sql= """UPDATE employee  SET Employeeid = %s, FirstName = %s, LastName = %s, Age= %s, Designation= %s, Salary= %s WHERE Employeeid = %s"""
-        
-        val=(Employeeid, FirstName, LastName, Age, Designation, Salary, Employeeid)
-        mycursor.execute(sql,val)
-        mydb.commit()
-        if mycursor.rowcount >0:
-            message= "Employee record updated successfully"
-            flash(message)
-        return redirect(url_for('index'))
+@app.route('/home')
+def home():
+    if 'username' in session:
+        username = session['username']
+        return render_template('cover.html', username=username)
+    else:
+        flash('You need to log in first.')
+        return redirect(url_for('login'))
     
-def show_employee_edit_form(Employeeid):
-    sql = "SELECT * FROM employee WHERE Employeeid = %s"
-    val= (Employeeid,)
-    mycursor.execute(sql,val)
-    myresult=mycursor.fetchone()
-    return render_template("edit.html",employee=myresult)
+@app.route('/elogin', methods=['GET', 'POST'])
+def elogin():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
         
-      
+        # Use your criteria for employee login
+        if username == "admin" and password == "12345":
+            session['eusername'] = username
+            flash('Admin login successful')
+            return redirect(url_for('employee'))
+        else:
+            flash('Invalid admin username or password')
+            return redirect(url_for('elogin'))
+    
+    return render_template('elogin.html')
+
+
+@app.route('/employee')
+def employee():
+        if 'eusername' in session:
+            mycursor.execute("SELECT * FROM project.employee")
+            employees = mycursor.fetchall()
+            return render_template('home.html', employees=employees)
+
+        else:
+            flash('You need to log in as an admin first.')
+            return redirect(url_for('elogin'))
+
+@app.route("/employee/create" , methods=['GET'])
+def show_employee_create_form():
+    if 'eusername' in session:
+        return render_template('create.html')
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
+
+@app.route('/employee/createemployee', methods=['POST'])
+def create():
+    if 'eusername' in session:
+            # Get form data
+            Employeeid = escape(request.form['Employeeid'])
+            FirstName = escape(request.form['FirstName'])
+            LastName = escape(request.form['LastName'])
+            Age = escape(request.form['Age'])
+            Designation = escape(request.form['Designation'])
+            Salary = escape(request.form['Salary'])
+            sql = """INSERT INTO employee (Employeeid, FirstName, LastName, Age, Designation, Salary) VALUES (%s, %s, %s, %s, %s, %s)"""
+            values = (Employeeid, FirstName, LastName, Age, Designation, Salary)
+            mycursor.execute(sql, values)
+            mydb.commit()
+            if mycursor.rowcount > 0:
+                flash("Employee created successfully")
+            else:
+                flash("Failed to create employee")
+
+            return redirect(url_for('employee'))
+        
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
+
+@app.route('/employee/edit/<Employeeid>', methods=['GET', 'POST'])
+def edit_employee(Employeeid):
+    if 'eusername' in session:
+        Employeeid = escape(Employeeid)
+        if request.method == 'GET':
+            return show_employee_edit_form(Employeeid)
+        else:
+            FirstName = escape(request.form['FirstName'])
+            LastName = escape(request.form['LastName'])
+            Age = escape(request.form['Age'])
+            Designation = escape(request.form['Designation'])
+            Salary = escape(request.form['Salary'])
+
+            sql = """UPDATE employee SET FirstName = %s, LastName = %s, Age = %s, Designation = %s, Salary = %s WHERE Employeeid = %s"""
+            
+            val = (FirstName, LastName, Age, Designation, Salary, Employeeid)
+            mycursor.execute(sql, val)
+            mydb.commit()
+            if mycursor.rowcount > 0:
+                flash("Employee record updated successfully")
+            else:
+                flash("Failed to update employee record")
+            
+            return redirect(url_for('employee'))
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
+
+def show_employee_edit_form(Employeeid):
+    if 'eusername' in session:
+        sql = "SELECT * FROM employee WHERE Employeeid = %s"
+        val = (Employeeid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        return render_template("edit.html", employee=myresult)
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
 
 
 if __name__ == '__main__':
