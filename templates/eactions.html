@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<button><a href="/employee/edit/{{ employee.Employeeid}}">Update Employee</a></button>
+<button><a href="/employee/delete/{{ employee.Employeeid}}">Delete Employee</a></button>
+
+{%endblock%}

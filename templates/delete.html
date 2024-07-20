@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% if employee %}
+   <h1>Delete Employee</h1>
+   <link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
+   <form action="/employee/delete/{{ employee.Employeeid}}" method="POST">
+   <label for=" Employeeid">Employee id:</label>
+   <input type="text" id="Employeeid" name="Employeeid" value="{{ employee.Employeeid}}"><br>
+   <label for="FirstName">First Name:</label>
+   <input type="text" id="FirstName" name="FirstName" value="{{ employee.FirstName}}"><br>
+   <label for="LastName">Last Name:</label>
+   <input type="text" id="LastName" name="LastName" value="{{ employee.LastName}}"><br>
+   <label for="Age">Age:</label>
+   <input type="text" id="Age" name="Age" value="{{ employee.Age}}"><br>
+   <div class="form-group">
+      <label for= "Designation">Designation</label>
+      <select class="form-control" name="Designation">
+         <option value="HR Manager" {% if employee.Designation == "HR Manager" %} selected {% endif %}>HR Manager</option>
+               <option value="Senior Software Engineer" {% if employee.Designation == "Senior Software Engineer" %} selected {% endif %}>Senior Software Engineer</option>
+               <option value="Junior Software Engineer" {% if employee.Designation == "Junior Software Engineer" %} selected {% endif %}>Junior Software Engineer</option>
+               <option value="Senior Frontend Developer" {% if employee.Designation == "Senior Frontend Developer" %} selected {% endif %}>Senior Frontend Developer</option>
+               <option value="Junior Frontend Developer" {% if employee.Designation == "Junior Frontend Developer" %} selected {% endif %}>Junior Frontend Developer</option>
+               <option value="Senior Backend Developer" {% if employee.Designation == "Senior Backend Developer" %} selected {% endif %}>Senior Backend Developer</option>
+               <option value="Junior Backend Developer" {% if employee.Designation == "Junior Backend Developer" %} selected {% endif %}>Junior Backend Developer</option>
+               <option value="System Analyst" {% if employee.Designation == "System Analyst" %} selected {% endif %}>System Analyst</option>
+               <option value="Senior Software Tester" {% if employee.Designation == "Senior Software Tester" %} selected {% endif %}>Senior Software Tester</option>
+               <option value="Junior Software Tester" {% if employee.Designation == "Junior Software Tester" %} selected {% endif %}>Junior Software Tester</option>
+      </select>
+   </div>
+   <label for="Salary">Salary:</label>
+   <input type="text" id="Salary" name="Salary" value="{{ employee.Salary}}"><br>
+   <button type="submit">Delete</button>
+   </form>
+{% endif %}
+{%endblock%}
