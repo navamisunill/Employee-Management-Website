@@ -143,6 +143,51 @@ def show_employee_edit_form(Employeeid):
     else:
         flash('You need to log in as an admin first.')
         return redirect(url_for('elogin'))
+    
+@app.route('/employee/delete/<Employeeid>', methods=['GET', 'POST'])
+def delete_employee(Employeeid):
+    Employeeid=escape(Employeeid)
+    if request.method=='GET':
+        return show_employee_delete_form(Employeeid)
+    else:
+        Employeeid=escape(Employeeid)
+        sql="DELETE FROM employee where Employeeid= %s"
+        val=(Employeeid,)
+        mycursor.execute(sql,val)
+        mydb.commit()
+        if mycursor.rowcount>0:
+            flash("Employee deleted successfully")
+        else:
+            flash("Failed to delete employee")
+        return redirect(url_for('employee'))
+    
+def show_employee_delete_form(Employeeid):
+    if 'eusername' in session:
+        sql = "SELECT * FROM employee WHERE Employeeid = %s"
+        val = (Employeeid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        return render_template("delete.html", employee=myresult)
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
+    
+@app.route('/employee/actions/<Employeeid>', methods=['GET', 'POST'])
+def actions(Employeeid):
+    Employeeid = escape(Employeeid)
+    # Retrieve the employee object
+    sql = "SELECT * FROM employee WHERE Employeeid = %s"
+    val = (Employeeid,)
+    mycursor.execute(sql, val)
+    employee = mycursor.fetchone()
+
+    # Check if employee exists
+    if employee:
+        return render_template('eactions.html', employee=employee)
+    else:
+        flash("Employee not found")
+        return redirect(url_for('employee'))
+
 
 
 if __name__ == '__main__':
