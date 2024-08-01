@@ -58,7 +58,7 @@ def elogin():
             flash('Invalid admin username or password')
             return redirect(url_for('elogin'))
     
-    return render_template('elogin.html')
+    return render_template('alogin.html')
 
 
 @app.route('/employee')
@@ -187,7 +187,78 @@ def actions(Employeeid):
     else:
         flash("Employee not found")
         return redirect(url_for('employee'))
+    
+    
+    
+@app.route("/employee_register", methods=['GET', 'POST'])
+def employee_register():
+    if request.method == "POST":
+        Employeeid= escape(request.form["Employeeid"])
+        password= escape(request.form["password"])
+        
+        sql="insert into employee_login (Employeeid, password) values (%s,%s)"
+        val=(Employeeid , password)
+        mycursor.execute(sql,val)
+        mydb.commit()
+        flash("Registration Succesful")
+        return redirect (url_for('employee_login'))
+    
+    return render_template("empregister.html")
 
+
+@app.route("/employee_login", methods=['GET', 'POST'])
+def employee_login():
+    if request.method == 'POST':
+        Employeeid= escape( request.form["Employeeid"])
+        password= escape(request.form["password"])
+        
+        sql= "select * from employee_login where Employeeid = %s and password = %s"
+        val= (Employeeid, password)
+        mycursor.execute(sql,val)
+        employee=mycursor.fetchone()
+        
+        if employee:
+            session["Employeeid"] = Employeeid 
+            flash("Login Succesful")
+            return redirect(url_for("employee_dashboard"))
+            
+            
+        else:
+            flash("Invalid Employeeid or password")
+            return redirect(url_for ("employee_login"))
+        
+    return render_template("emplogin.html")
+
+
+@app.route("/employee_dashboard", methods=['GET', 'POST'])
+def employee_dashboard():
+    if "Employeeid" in session:
+        Employeeid = session["Employeeid"]
+        
+        sql= "select * from employee where Employeeid = %s"
+        val= (Employeeid,)
+        mycursor.execute(sql, val )
+        employee = mycursor.fetchone()
+        
+        
+        if employee:
+                return render_template("empdashboard.html", employee=employee)
+        else:
+            flash("No employee details found.")
+            return redirect(url_for("employee_login"))
+    
+    else:
+        flash("You need to login first")
+        return redirect(url_for ("employee_login"))
+    
+    
+@app.route("/logout")
+def logout():
+    session.pop("Employeeid", None) 
+    flash ("You have been logged out")
+    return redirect(url_for ("employee_login"))
+           
+                   
 
 
 if __name__ == '__main__':

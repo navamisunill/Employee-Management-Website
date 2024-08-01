@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h2>Welcome, {{ employee[1] }} {{ employee[2] }}</h2>
+<p>Employee ID: {{ employee[0] }}</p>
+<p>Age: {{ employee[3] }}</p>
+<p>Designation: {{ employee[4] }}</p>
+<p>Salary: {{ employee[5] }}</p>
+<button><a>Apply for Leave</a></button>
+<button><a>Logout</a></button>
+
+{% endblock %}
