@@ -240,7 +240,6 @@ def employee_dashboard():
         mycursor.execute(sql, val )
         employee = mycursor.fetchone()
         
-        
         if employee:
                 return render_template("empdashboard.html", employee=employee)
         else:
@@ -257,9 +256,53 @@ def logout():
     session.pop("Employeeid", None) 
     flash ("You have been logged out")
     return redirect(url_for ("employee_login"))
-           
-                   
 
+
+
+@app.route("/employee/apply_leave", methods=['GET', 'POST'])
+def apply_leave():
+    if "Employeeid" in session:
+        Employeeid = session["Employeeid"]
+
+        if request.method == 'POST':
+            # Retrieve form data
+            leave_type = escape(request.form['leave_type'])
+            other_leave_type = escape(request.form['other_leave_type']) if 'other_leave_type' in request.form else ''
+            leave_reason = escape(request.form['leave_reason'])
+            leave_start = escape(request.form['leave_start'])
+            leave_end = escape(request.form['leave_end'])
+
+            # Use the "Other" leave type if it's specified
+            if leave_type == "Other" and other_leave_type:
+                leave_type = other_leave_type
+
+            # Insert the new leave application into the database
+            sql = """
+                INSERT INTO leave_applications (Employeeid, leave_type, leave_reason, leave_start, leave_end)
+                VALUES (%s, %s, %s, %s, %s)
+            """
+            values = (Employeeid, leave_type, leave_reason, leave_start, leave_end)
+            mycursor.execute(sql, values)
+            mydb.commit()
+
+            if mycursor.rowcount > 0:
+                flash("Leave application submitted successfully.")
+            else:
+                flash("Failed to submit leave application.")
+            return redirect(url_for("apply_leave"))
+
+        # Retrieve all leave applications for the current employee
+        sql = "SELECT * FROM leave_applications WHERE Employeeid = %s"
+        mycursor.execute(sql, (Employeeid,))
+        leaves = mycursor.fetchall()
+
+        return render_template("apply_leave.html", leaves=leaves)
+    else:
+        flash("You need to login first.")
+        return redirect(url_for("employee_login"))
+
+
+           
 
 if __name__ == '__main__':
     app.run(debug=True)

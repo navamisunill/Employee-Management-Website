@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<h2>Welcome, {{ employee[1] }} {{ employee[2] }}</h2>
-<p>Employee ID: {{ employee[0] }}</p>
-<p>Age: {{ employee[3] }}</p>
-<p>Designation: {{ employee[4] }}</p>
-<p>Salary: {{ employee[5] }}</p>
-<button><a>Apply for Leave</a></button>
-<button><a>Logout</a></button>
+<h2>Welcome, {{ employee["FirstName"] }} {{ employee["LastName"] }}</h2>
+<p>Employee ID: {{ employee["Employeeid"] }}</p>
+<p>Age: {{ employee["Age"] }}</p>
+<p>Designation: {{ employee["Designation"] }}</p>
+<p>Salary: {{ employee["Salary"] }}</p>
+<button><a href="{{url_for('apply_leave')}}">Apply for Leave</a></button>
+<button><a href="{{url_for('logout')}}">Logout</a></button>
 
 {% endblock %}
