@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+<h2>Leave Applications by {{ employee['FirstName'] }} {{ employee['LastName'] }}</h2>
+<p>Employee ID: {{ employee['Employeeid'] }}</p>
+<p>Designation: {{ employee['Designation'] }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Reason</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for leave in leave_applications %}
+            <tr>
+                <td>{{ leave['leave_type'] }}</td>
+                <td>{{ leave['leave_reason'] }}</td>
+                <td>{{ leave['leave_start'] }}</td>
+                <td>{{ leave['leave_end'] }}</td>
+                <td>{{ leave['status'] }}</td>
+                <td>
+                    <form action="{{ url_for('view_leave_applications', Employeeid=employee['Employeeid']) }}" method="POST">
+                        <input type="hidden" name="application_id" value="{{ leave['sno'] }}">
+                        <select name="admin_decision">
+                            <option value="Pending" {% if leave['status'] == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Accepted" {% if leave['status'] == 'Accepted' %}selected{% endif %}>Accept</option>
+                            <option value="Denied" {% if leave['status'] == 'Denied' %}selected{% endif %}>Deny</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><a href="{{ url_for('employee') }}">Back to Admin Dashboard</a></p>
+{% endblock %}

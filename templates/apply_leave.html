@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+    <h2>Apply for Leave</h2>
+
+    <form action="{{ url_for('apply_leave') }}" method="POST">
+        <div class="form-group">
+            <label for="leave_type">Leave Type:</label>
+            <select id="leave_type" name="leave_type" onchange="showOtherInput(this.value)">
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Maternity Leave">Maternity Leave</option>
+                <option value="Casual Leave">Casual Leave</option>
+                <option value="Paid Leave">Paid Leave</option>
+                <option value="Vacation">Vacation</option>
+                <option value="Personal Leave">Personal Leave</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" id="other_leave_type" name="other_leave_type" style="display:none;" placeholder="Please specify" />
+        </div>
+        <div class="form-group">
+            <label for="leave_reason">Leave Reason:</label>
+            <textarea id="leave_reason" name="leave_reason" rows="4" cols="50" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="leave_start">Start Date:</label>
+            <input type="date" id="leave_start" name="leave_start" required>
+        </div>
+        <div class="form-group">
+            <label for="leave_end">End Date:</label>
+            <input type="date" id="leave_end" name="leave_end" required>
+        </div>
+        <button type="submit">Submit Leave Application</button>
+    </form>
+
+    <h3>Your Leave Applications</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leave in leaves %}
+                <tr>
+                    <td>{{ leave['leave_type'] }}</td>
+                    <td>{{ leave['leave_reason'] }}</td>
+                    <td>{{ leave['leave_start'] }}</td>
+                    <td>{{ leave['leave_end'] }}</td>
+                    <td>{{ leave['status'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function showOtherInput(value) {
+            if (value === "Other") {
+                document.getElementById("other_leave_type").style.display = "block";
+            } else {
+                document.getElementById("other_leave_type").style.display = "none";
+            }
+        }
+    </script>
+{% endblock %}

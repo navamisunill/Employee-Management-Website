@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
 {% if employee %}
    <h1>Delete Employee</h1>
    <link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">

@@ -2,6 +2,7 @@
 {%block content%}
 <h1>Create Employee</h1>
 <link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
 <form action="/employee/createemployee" method='POST'>
     <label for="Employeeid">Employee id:</label>
     <input type="text" id="Employeeid" name="Employeeid"><br>

@@ -302,6 +302,37 @@ def apply_leave():
         return redirect(url_for("employee_login"))
 
 
+@app.route('/employee/view_leave_applications/<Employeeid>', methods=['GET', 'POST'])
+def view_leave_applications(Employeeid):
+    if 'eusername' in session:
+        if request.method == 'POST':
+            # Retrieve form data
+            application_id = request.form['application_id']
+            admin_decision = request.form['admin_decision']
+
+            # Update the leave application status in the database
+            sql = "UPDATE leave_applications SET status = %s WHERE sno = %s"
+            mycursor.execute(sql, (admin_decision, application_id))
+            mydb.commit()
+
+            flash("Leave application updated successfully.")
+            return redirect(url_for("view_leave_applications", Employeeid=Employeeid))
+
+        # Retrieve all leave applications for the specific employee
+        sql = "SELECT * FROM leave_applications WHERE Employeeid = %s"
+        mycursor.execute(sql, (Employeeid,))
+        leave_applications = mycursor.fetchall()
+
+        # Retrieve employee details
+        sql = "SELECT * FROM employee WHERE Employeeid = %s"
+        mycursor.execute(sql, (Employeeid,))
+        employee = mycursor.fetchone()
+
+        return render_template("admin_leave_applications.html", employee=employee, leave_applications=leave_applications)
+    else:
+        flash("You need to login as admin first.")
+        return redirect(url_for("alogin"))
+
            
 
 if __name__ == '__main__':

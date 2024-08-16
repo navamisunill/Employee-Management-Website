@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
 <button><a href="/employee/edit/{{ employee.Employeeid}}">Update Employee</a></button>
 <button><a href="/employee/delete/{{ employee.Employeeid}}">Delete Employee</a></button>
+<button><a href="{{ url_for('view_leave_applications', Employeeid=employee['Employeeid']) }}">View leave applications</a></button>
 
 {%endblock%}
