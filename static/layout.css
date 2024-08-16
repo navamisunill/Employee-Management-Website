@@ -102,6 +102,10 @@ table {
     text-align: center;
 }
 
+  .company_login{
+    margin-top: 5%;
+  }
+
 .logo-container {
   display: flex;
   justify-content: center; /* Centers horizontally */
@@ -132,3 +136,19 @@ table {
 #createbutton:hover {
   background-color: darkgray; /* Darken background color on hover */
 }
+
+
+
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: white;
+  background-color: #f44336; /* Red color to indicate urgency */
+  border-radius: 5px;
+}
+
+.no-pending {
+  color: #555;
+}
+

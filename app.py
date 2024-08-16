@@ -63,14 +63,30 @@ def elogin():
 
 @app.route('/employee')
 def employee():
-        if 'eusername' in session:
-            mycursor.execute("SELECT * FROM project.employee")
-            employees = mycursor.fetchall()
-            return render_template('home.html', employees=employees)
+    if 'eusername' in session:
+        # Retrieve all employees
+        mycursor.execute("SELECT * FROM project.employee")
+        employees = mycursor.fetchall()
 
-        else:
-            flash('You need to log in as an admin first.')
-            return redirect(url_for('elogin'))
+        # Retrieve the count of pending leave applications for each employee
+        sql = """
+        SELECT Employeeid, COUNT(*) as pending_count 
+        FROM project.leave_applications 
+        WHERE status = 'Pending' 
+        GROUP BY Employeeid
+        """
+        mycursor.execute(sql)
+        pending_counts = mycursor.fetchall()
+
+        # Create a dictionary for easy lookup of pending leave counts
+        pending_counts_dict = {item['Employeeid']: item['pending_count'] for item in pending_counts}
+
+        return render_template('home.html', employees=employees, pending_counts=pending_counts_dict)
+
+    else:
+        flash('You need to log in as an admin first.')
+        return redirect(url_for('elogin'))
+    
 
 @app.route("/employee/create" , methods=['GET'])
 def show_employee_create_form():
@@ -250,12 +266,6 @@ def employee_dashboard():
         flash("You need to login first")
         return redirect(url_for ("employee_login"))
     
-    
-@app.route("/logout")
-def logout():
-    session.pop("Employeeid", None) 
-    flash ("You have been logged out")
-    return redirect(url_for ("employee_login"))
 
 
 
@@ -332,6 +342,13 @@ def view_leave_applications(Employeeid):
     else:
         flash("You need to login as admin first.")
         return redirect(url_for("alogin"))
+    
+    
+@app.route("/logout")
+def logout():
+    session.pop("Employeeid", None) 
+    flash ("You have been logged out")
+    return redirect(url_for ("employee_login"))
 
            
 

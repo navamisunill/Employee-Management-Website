@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
   <h2> Employees</h2> 
 
   <a href="/employee/create">
@@ -16,6 +17,7 @@
             <th>Designation</th>
             <th>Salary</th>
             <th>Actions</th>
+            <th>Leave</th>
         </tr>
         {% for e in employees %}
             <tr>
@@ -26,6 +28,13 @@
                 <td> {{ e.Designation }}</td>
                 <td> {{ e.Salary }}</td>
                 <td><a href="/employee/actions/{{ e.Employeeid }}"><i class="fas fa-edit"></i></a></td>
+                <td>
+                    {% if pending_counts.get(e['Employeeid'], 0) > 0 %}
+                        <span class="badge">{{ pending_counts[e['Employeeid']] }} Pending</span>
+                    {% else %}
+                        <span class="no-pending">No Pending Applications</span>
+                    {% endif %}
+                </td>
             </tr>   
         {% endfor %}
     </table>

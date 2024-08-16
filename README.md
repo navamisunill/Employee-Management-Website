@@ -21,4 +21,4 @@ Technical Details
 
 - Built using Python Flask as the backend framework
 - MySQL database for storing employee records and leave applications
-- HTML, CSS, and JavaScript for frontend development
+- HTML, CSS for frontend development

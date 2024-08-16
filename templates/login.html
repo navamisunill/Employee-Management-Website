@@ -6,18 +6,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='createform.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
     <title>Login Form</title>
-    <style>
-        .company-title {
-            background-color: black;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <div class="company-title">
-        <h1>CODESPHERE TECHNOLOGY</h1>
+        <h1>CODESPHERE TECHNOLOGIES</h1>
     </div>
 
     {% with messages = get_flashed_messages() %}
@@ -30,7 +22,7 @@
         {% endif %}
     {% endwith %}
 
-    <div id="parent">
+    <div id="parent" class="company_login">
         <form action="{{ url_for('login') }}" method='POST' id="form_login">
             <h2>Login</h2>
             <label for="username">Username</label>
